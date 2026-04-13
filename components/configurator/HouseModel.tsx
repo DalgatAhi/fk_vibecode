@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Center, useGLTF } from "@react-three/drei";
 import { Color, Mesh, MeshStandardMaterial, Material } from "three";
 import type { RoofConfiguration, RoofMaterialType } from "@/lib/types";
@@ -17,6 +17,19 @@ export function HouseModel({ configuration }: { configuration: RoofConfiguration
   const { scene } = useGLTF(MODEL_PATH);
   const clonedScene = useMemo(() => scene.clone(), [scene]);
   const roofMaterialConfig = ROOF_MATERIALS[configuration.materialType];
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const mediaQuery = window.matchMedia("(max-width: 768px)");
+    const updateIsMobile = () => setIsMobile(mediaQuery.matches);
+
+    updateIsMobile();
+    mediaQuery.addEventListener("change", updateIsMobile);
+
+    return () => mediaQuery.removeEventListener("change", updateIsMobile);
+  }, []);
 
   useEffect(() => {
     clonedScene.traverse((child) => {
@@ -43,8 +56,11 @@ export function HouseModel({ configuration }: { configuration: RoofConfiguration
 
   return (
     <Center>
-      <group rotation={[0, -Math.PI / 3.6, 0]} position={[0, -0.55, 0]}>
-        <primitive object={clonedScene} scale={0.42} />
+      <group
+        rotation={[0, -Math.PI / 3.6, 0]}
+        position={isMobile ? [0, -0.2, 0] : [0, -0.55, 0]}
+      >
+        <primitive object={clonedScene} scale={isMobile ? 0.62 : 0.42} />
       </group>
     </Center>
   );

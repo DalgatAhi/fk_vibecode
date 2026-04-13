@@ -606,6 +606,13 @@ input {
     padding-top: var(--space-4);
   }
 
+<<<<<<< HEAD
+=======
+  .configurator-section {
+    margin-top: var(--space-6);
+  }
+
+>>>>>>> f4db615 (mobile 3d fix)
   .hero,
   .hero-copy,
   .configurator-layout {
@@ -693,12 +700,21 @@ input {
 
   .viewer-shell {
     aspect-ratio: auto;
+<<<<<<< HEAD
     min-height: 380px;
+=======
+    min-height: 64vh;
+    max-height: 70vh;
+>>>>>>> f4db615 (mobile 3d fix)
     border-radius: 22px;
   }
 
   .configurator-heading {
+<<<<<<< HEAD
     padding: var(--space-4) var(--space-4) 0;
+=======
+    padding: var(--space-2) var(--space-4) 0;
+>>>>>>> f4db615 (mobile 3d fix)
   }
 
   .configurator-heading h2 {
@@ -736,11 +752,15 @@ input {
   }
 
   .scene-tips {
+<<<<<<< HEAD
     left: var(--space-4);
     right: var(--space-4);
     bottom: var(--space-4);
     max-width: none;
     font-size: 0.84rem;
+=======
+    display: none;
+>>>>>>> f4db615 (mobile 3d fix)
   }
 }
 
@@ -783,11 +803,20 @@ input {
   }
 
   .viewer-shell {
+<<<<<<< HEAD
     min-height: 320px;
   }
 
   .configurator-heading {
     padding: 14px 14px 0;
+=======
+    min-height: 68vh;
+    max-height: 72vh;
+  }
+
+  .configurator-heading {
+    padding: var(--space-2) var(--space-2) 0;
+>>>>>>> f4db615 (mobile 3d fix)
   }
 
   .configurator-heading p {
