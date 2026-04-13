@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Center, useGLTF } from "@react-three/drei";
+import { useGLTF } from "@react-three/drei";
 import { Color, Mesh, MeshStandardMaterial, Material } from "three";
 import type { RoofConfiguration, RoofMaterialType } from "@/lib/types";
 
@@ -17,18 +17,27 @@ export function HouseModel({ configuration }: { configuration: RoofConfiguration
   const { scene } = useGLTF(MODEL_PATH);
   const clonedScene = useMemo(() => scene.clone(), [scene]);
   const roofMaterialConfig = ROOF_MATERIALS[configuration.materialType];
+  const [isCompact, setIsCompact] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
 
+    const compactQuery = window.matchMedia("(max-width: 1080px)");
     const mediaQuery = window.matchMedia("(max-width: 768px)");
-    const updateIsMobile = () => setIsMobile(mediaQuery.matches);
+    const updateLayoutFlags = () => {
+      setIsCompact(compactQuery.matches);
+      setIsMobile(mediaQuery.matches);
+    };
 
-    updateIsMobile();
-    mediaQuery.addEventListener("change", updateIsMobile);
+    updateLayoutFlags();
+    compactQuery.addEventListener("change", updateLayoutFlags);
+    mediaQuery.addEventListener("change", updateLayoutFlags);
 
-    return () => mediaQuery.removeEventListener("change", updateIsMobile);
+    return () => {
+      compactQuery.removeEventListener("change", updateLayoutFlags);
+      mediaQuery.removeEventListener("change", updateLayoutFlags);
+    };
   }, []);
 
   useEffect(() => {
@@ -55,14 +64,12 @@ export function HouseModel({ configuration }: { configuration: RoofConfiguration
   ]);
 
   return (
-    <Center>
-      <group
-        rotation={[0, -Math.PI / 3.6, 0]}
-        position={isMobile ? [0, -0.2, 0] : [0, -0.55, 0]}
-      >
-        <primitive object={clonedScene} scale={isMobile ? 0.62 : 0.42} />
-      </group>
-    </Center>
+    <group
+      rotation={[0, -Math.PI / 3.6, 0]}
+      position={isMobile ? [0, -2.38, 0] : isCompact ? [0, -1.05, 0] : [0, -0.55, 0]}
+    >
+      <primitive object={clonedScene} scale={isMobile ? 0.62 : isCompact ? 0.52 : 0.42} />
+    </group>
   );
 }
 

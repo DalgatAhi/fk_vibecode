@@ -141,7 +141,9 @@ export function Configurator3D() {
             конфигурацию.
           </p>
         </div>
-        <RoofScene configuration={configuration} isPending={isPending} />
+        <div className="scene-wrapper">
+          <RoofScene configuration={configuration} isPending={isPending} />
+        </div>
         <div className="scene-tips">
           <strong>Управление сценой</strong>
           ЛКМ: вращение, колесо: масштаб, ПКМ или два пальца: смещение.
