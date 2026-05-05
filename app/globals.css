@@ -73,8 +73,7 @@ input {
 }
 
 .hero-copy,
-.hero-facts,
-.status-banner {
+.hero-facts {
   backdrop-filter: blur(20px);
   background: var(--surface);
   border: 1px solid var(--line);
@@ -298,23 +297,26 @@ input {
 .configurator-layout {
   display: flex;
   align-items: flex-start;
-  gap: 24px;
+  gap: 40px;
   width: 100%;
 }
 
 .configurator-left {
   position: sticky;
-  top: 0;
+  top: 80px;
   flex: 1;
   min-width: 0;
-  height: 100vh;
+  height: calc(100vh - 80px);
+  margin-top: 0;
 }
 
 .configurator-right {
-  width: 420px;
-  min-width: 420px;
+  width: 460px;
+  min-width: 460px;
   flex-shrink: 0;
-  padding: var(--space-6) var(--page-gutter) var(--space-6) 0;
+  padding: 0 var(--page-gutter) var(--space-6) 0;
+  background: transparent;
+  margin-top: 0;
 }
 
 .viewer-shell {
@@ -323,6 +325,8 @@ input {
   height: 100%;
   border-radius: 28px;
   overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
   background:
     linear-gradient(180deg, rgba(251, 249, 246, 0.9), rgba(230, 220, 209, 0.9)),
     linear-gradient(135deg, rgba(76, 109, 88, 0.18), transparent 60%);
@@ -383,9 +387,14 @@ input {
 .control-panel {
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
+  gap: var(--space-6);
   width: 100%;
   min-width: 0;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  border-radius: 0;
+  padding: 0;
 }
 
 .panel-group,
