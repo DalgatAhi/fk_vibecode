@@ -1,10 +1,63 @@
 "use client";
 
-import { Suspense, useEffect, useState } from "react";
-import { Canvas } from "@react-three/fiber";
+import { Suspense, useEffect, useRef, useState } from "react";
+import { Canvas, useThree } from "@react-three/fiber";
 import { ContactShadows, Html, OrbitControls } from "@react-three/drei";
 import { HouseModel } from "@/components/configurator/HouseModel";
 import type { RoofConfiguration } from "@/lib/types";
+import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
+
+const IDLE_MS = 3000;
+
+function AutoRotate({ controlsRef }: { controlsRef: React.RefObject<OrbitControlsImpl> }) {
+  const { gl } = useThree();
+
+  useEffect(() => {
+    const canvas = gl.domElement;
+    let timer: ReturnType<typeof setTimeout>;
+
+    function startTimer() {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        if (controlsRef.current) controlsRef.current.autoRotate = true;
+      }, IDLE_MS);
+    }
+
+    function onInteraction() {
+      if (controlsRef.current) controlsRef.current.autoRotate = false;
+      startTimer();
+    }
+
+    startTimer();
+    canvas.addEventListener("pointermove", onInteraction);
+    canvas.addEventListener("pointerdown", onInteraction);
+    canvas.addEventListener("wheel", onInteraction);
+
+    return () => {
+      clearTimeout(timer);
+      canvas.removeEventListener("pointermove", onInteraction);
+      canvas.removeEventListener("pointerdown", onInteraction);
+      canvas.removeEventListener("wheel", onInteraction);
+    };
+  }, [gl, controlsRef]);
+
+  return null;
+}
+
+function CameraReset({ controlsRef }: { controlsRef: React.RefObject<OrbitControlsImpl> }) {
+  const { gl } = useThree();
+
+  useEffect(() => {
+    const canvas = gl.domElement;
+    function onDblClick() {
+      controlsRef.current?.reset();
+    }
+    canvas.addEventListener("dblclick", onDblClick);
+    return () => canvas.removeEventListener("dblclick", onDblClick);
+  }, [gl, controlsRef]);
+
+  return null;
+}
 
 type RoofSceneProps = {
   configuration: RoofConfiguration;
@@ -14,6 +67,7 @@ type RoofSceneProps = {
 export function RoofScene({ configuration, isPending: _isPending }: RoofSceneProps) {
   const [isCompact, setIsCompact] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const controlsRef = useRef<OrbitControlsImpl>(null);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -48,7 +102,7 @@ export function RoofScene({ configuration, isPending: _isPending }: RoofScenePro
       shadows
     >
       <color attach="background" args={["#f5efe7"]} />
-      <ambientLight intensity={1.25} />
+      <ambientLight intensity={2.25} />
       <hemisphereLight intensity={0.75} groundColor="#d6c8ba" color="#fff6ed" />
       <directionalLight
         castShadow
@@ -96,7 +150,12 @@ export function RoofScene({ configuration, isPending: _isPending }: RoofScenePro
         position={isMobile ? [0, -2.3, 0] : isCompact ? [0, -1.08, 0] : [0, -0.62, 0]}
       />
 
+      <AutoRotate controlsRef={controlsRef} />
+      <CameraReset controlsRef={controlsRef} />
+
       <OrbitControls
+        ref={controlsRef}
+        autoRotateSpeed={0.8}
         enablePan
         enableZoom
         enableDamping
