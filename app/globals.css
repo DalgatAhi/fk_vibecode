@@ -60,10 +60,8 @@ input {
 }
 
 .page-shell-configurator {
-  min-height: 100vh;
-  display: grid;
-  align-items: center;
-  padding: var(--space-6) 0;
+  width: 100%;
+  padding: 0;
 }
 
 .hero {
@@ -76,7 +74,6 @@ input {
 
 .hero-copy,
 .hero-facts,
-.configurator-layout,
 .status-banner {
   backdrop-filter: blur(20px);
   background: var(--surface);
@@ -299,22 +296,31 @@ input {
 }
 
 .configurator-layout {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(340px, 420px);
-  align-items: start;
-  gap: var(--space-6);
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
   width: 100%;
-  padding: var(--space-6);
-  border-radius: 32px;
+}
+
+.configurator-left {
+  position: sticky;
+  top: 0;
+  flex: 1;
+  min-width: 0;
+  height: 100vh;
+}
+
+.configurator-right {
+  width: 420px;
+  min-width: 420px;
+  flex-shrink: 0;
+  padding: var(--space-6) var(--page-gutter) var(--space-6) 0;
 }
 
 .viewer-shell {
   position: relative;
-  min-width: 0;
   width: 100%;
-  aspect-ratio: 4 / 3;
-  min-height: 520px;
-  max-height: min(76vh, 860px);
+  height: 100%;
   border-radius: 28px;
   overflow: hidden;
   background:
@@ -326,7 +332,6 @@ input {
   position: relative;
   width: 100%;
   height: 100%;
-  min-height: inherit;
   border-radius: inherit;
   overflow: hidden;
 }
@@ -418,7 +423,7 @@ input {
 }
 
 .option-grid {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: 1fr;
 }
 
 .color-grid {
@@ -536,14 +541,6 @@ input {
   :root {
     --page-gutter: 24px;
   }
-
-  .configurator-layout {
-    grid-template-columns: minmax(0, 1fr) 440px;
-  }
-
-  .viewer-shell {
-    min-height: 620px;
-  }
 }
 
 @media (max-width: 1280px) {
@@ -559,19 +556,10 @@ input {
   .hero h1 {
     font-size: clamp(2.4rem, 5.8vw, 5rem);
   }
-
-  .configurator-layout {
-    grid-template-columns: minmax(0, 1fr) 360px;
-  }
-
-  .viewer-shell {
-    min-height: 500px;
-  }
 }
 
 @media (max-width: 1080px) {
-  .hero,
-  .configurator-layout {
+  .hero {
     grid-template-columns: 1fr;
   }
 
@@ -583,14 +571,38 @@ input {
     grid-column: 1 / -1;
   }
 
+  .scene-tips {
+    right: var(--space-4);
+    bottom: var(--space-4);
+  }
+}
+
+@media (max-width: 767px) {
+  .configurator-layout {
+    flex-direction: column;
+  }
+
+  .configurator-left {
+    position: static;
+    flex: none;
+    width: 100%;
+    height: auto;
+  }
+
+  .configurator-right {
+    width: 100%;
+    min-width: 0;
+    padding: var(--space-4) var(--page-gutter);
+  }
+
   .viewer-shell {
-    aspect-ratio: 16 / 10;
-    min-height: 500px;
-    max-height: none;
+    height: auto;
+    border-radius: 22px;
   }
 
   .scene-wrapper {
-    min-height: 500px;
+    height: clamp(330px, 45vh, 410px);
+    min-height: 330px;
   }
 
   .configurator-heading {
@@ -598,12 +610,7 @@ input {
   }
 
   .scene-tips {
-    right: var(--space-4);
-    bottom: var(--space-4);
-  }
-
-  .control-panel {
-    padding: 0;
+    display: none;
   }
 }
 
@@ -615,13 +622,13 @@ input {
   .page-shell {
     padding-top: var(--space-4);
   }
+
   .configurator-section {
     margin-top: var(--space-6);
   }
 
   .hero,
-  .hero-copy,
-  .configurator-layout {
+  .hero-copy {
     padding: var(--space-6);
   }
 
@@ -698,28 +705,6 @@ input {
     gap: var(--space-2);
   }
 
-  .configurator-layout {
-    gap: var(--space-4);
-    padding: var(--space-4);
-    border-radius: 26px;
-  }
-
-  .viewer-shell {
-    aspect-ratio: auto;
-    min-height: 0;
-    max-height: none;
-    border-radius: 22px;
-  }
-
-  .scene-wrapper {
-    height: clamp(330px, 45vh, 410px);
-    min-height: 330px;
-  }
-
-  .configurator-heading {
-    display: none;
-  }
-
   .option-grid,
   .color-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -744,10 +729,6 @@ input {
     min-height: 48px;
     padding: 12px 14px;
   }
-
-  .scene-tips {
-    display: none;
-  }
 }
 
 @media (max-width: 480px) {
@@ -755,8 +736,7 @@ input {
     --page-gutter: 10px;
   }
 
-  .page-shell,
-  .page-shell-configurator {
+  .page-shell {
     padding-bottom: var(--space-6);
   }
 
@@ -783,24 +763,9 @@ input {
     font-size: 0.94rem;
   }
 
-  .configurator-layout {
-    padding: var(--space-2);
-    gap: var(--space-4);
-  }
-
-  .viewer-shell {
-    min-height: 0;
-    max-height: none;
-  }
-
   .scene-wrapper {
     height: clamp(290px, 39vh, 350px);
     min-height: 290px;
-  }
-
-  .scene-tips {
-    padding: 10px 12px;
-    font-size: 0.8rem;
   }
 
   .option-grid,

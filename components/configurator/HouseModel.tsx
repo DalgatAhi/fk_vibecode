@@ -1,127 +1,200 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { useGLTF } from "@react-three/drei";
-import { Color, Mesh, MeshStandardMaterial, Material } from "three";
-import type { RoofConfiguration, RoofMaterialType } from "@/lib/types";
+import { Color, Mesh, MeshStandardMaterial, Material, Object3D } from "three";
+import type { RoofConfiguration, RoofMaterialType, RoofShape } from "@/lib/types";
 
 const MODEL_PATH = "/models/house.glb";
 
 const ROOF_MATERIALS = {
-  corrugated: { roughness: 0.72, metalness: 0.22 },
-  metal_tile: { roughness: 0.58, metalness: 0.34 },
-  standing_seam: { roughness: 0.42, metalness: 0.38 },
-} satisfies Record<RoofMaterialType, { roughness: number; metalness: number }>;
+  corrugated: { roughness: 0.5, metalness: 0.24, emissiveIntensity: 0.08 },
+  metal_tile: { roughness: 0.46, metalness: 0.3, emissiveIntensity: 0.08 },
+  standing_seam: { roughness: 0.34, metalness: 0.42, emissiveIntensity: 0.08 },
+} satisfies Record<
+  RoofMaterialType,
+  { roughness: number; metalness: number; emissiveIntensity: number }
+>;
+
+const SHAPE_ROOF_OBJECTS = {
+  default: {
+    metal_tile: ["Roof_Metal"],
+    corrugated: ["Roof_Profnastil"],
+    standing_seam: ["Roof_Falcev"],
+  },
+  hip: {
+    metal_tile: ["Roof_Valm_Metal"],
+    corrugated: ["Roof_Valm_Prof"],
+    standing_seam: ["Roof_Valm_Falc"],
+  },
+} satisfies Record<"default" | "hip", Record<RoofMaterialType, string[]>>;
+
+const ROOF_BASE_OBJECTS = ["Roof_Base"];
+
+const ALL_ROOF_OBJECT_NAMES = [
+  ...Object.values(SHAPE_ROOF_OBJECTS.default).flat(),
+  ...Object.values(SHAPE_ROOF_OBJECTS.hip).flat(),
+];
+
+function findObjects(scene: Object3D, names: string[]) {
+  const result: Object3D[] = [];
+
+  scene.traverse((child) => {
+    const childName = child.name.toLowerCase();
+
+    if (names.some((name) => childName.includes(name.toLowerCase()))) {
+      result.push(child);
+    }
+  });
+
+  return result;
+}
+
+function getRoofObjectNames(roofShape: RoofShape, materialType: RoofMaterialType) {
+  const shapeKey = roofShape === "hip" ? "hip" : "default";
+  return SHAPE_ROOF_OBJECTS[shapeKey][materialType];
+}
+
+function setVisible(objects: Object3D[], visible: boolean) {
+  objects.forEach((obj) => {
+    obj.visible = visible;
+
+    obj.traverse((child) => {
+      child.visible = visible;
+    });
+  });
+}
+
+function setShadows(scene: Object3D) {
+  scene.traverse((child) => {
+    if (!(child instanceof Mesh)) return;
+
+    child.castShadow = true;
+    child.receiveShadow = true;
+  });
+}
 
 export function HouseModel({ configuration }: { configuration: RoofConfiguration }) {
   const { scene } = useGLTF(MODEL_PATH);
-  const clonedScene = useMemo(() => scene.clone(), [scene]);
+  const clonedScene = useMemo(() => scene.clone(true), [scene]);
   const roofMaterialConfig = ROOF_MATERIALS[configuration.materialType];
-  const [isCompact, setIsCompact] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
+    setShadows(clonedScene);
 
-    const compactQuery = window.matchMedia("(max-width: 1080px)");
-    const mediaQuery = window.matchMedia("(max-width: 768px)");
-    const updateLayoutFlags = () => {
-      setIsCompact(compactQuery.matches);
-      setIsMobile(mediaQuery.matches);
-    };
+    const roofBaseObjects = findObjects(clonedScene, ROOF_BASE_OBJECTS);
+    setVisible(roofBaseObjects, true);
 
-    updateLayoutFlags();
-    compactQuery.addEventListener("change", updateLayoutFlags);
-    mediaQuery.addEventListener("change", updateLayoutFlags);
+    const allRoofObjects = findObjects(clonedScene, ALL_ROOF_OBJECT_NAMES);
+    setVisible(allRoofObjects, false);
 
-    return () => {
-      compactQuery.removeEventListener("change", updateLayoutFlags);
-      mediaQuery.removeEventListener("change", updateLayoutFlags);
-    };
-  }, []);
+    const activeRoof = findObjects(
+      clonedScene,
+      getRoofObjectNames(configuration.roofShape, configuration.materialType)
+    );
 
-  useEffect(() => {
-    clonedScene.traverse((child) => {
-      if (!(child instanceof Mesh)) return;
+    setVisible(activeRoof, true);
 
-      child.castShadow = true;
-      child.receiveShadow = true;
+    activeRoof.forEach((object) => {
+      object.traverse((child) => {
+        if (!(child instanceof Mesh)) return;
 
-      if (isRoofMesh(child)) {
         child.material = prepareRoofMaterial(
           child.material,
           configuration.color.hex,
           roofMaterialConfig.roughness,
-          roofMaterialConfig.metalness
+          roofMaterialConfig.metalness,
+          roofMaterialConfig.emissiveIntensity,
+          configuration.materialType
         );
-      }
+      });
     });
   }, [
     clonedScene,
+    configuration.roofShape,
+    configuration.materialType,
     configuration.color.hex,
     roofMaterialConfig.roughness,
     roofMaterialConfig.metalness,
+    roofMaterialConfig.emissiveIntensity,
   ]);
 
   return (
-    <group
-      rotation={[0, -Math.PI / 3.6, 0]}
-      position={isMobile ? [0, -2.38, 0] : isCompact ? [0, -1.05, 0] : [0, -0.55, 0]}
-    >
-      <primitive object={clonedScene} scale={isMobile ? 0.62 : isCompact ? 0.52 : 0.42} />
+    <group rotation={[0, -Math.PI / 3.6, 0]} position={[0, -0.55, 0]}>
+      <primitive object={clonedScene} scale={0.42} />
     </group>
   );
 }
 
 useGLTF.preload(MODEL_PATH);
 
-function isRoofMesh(mesh: Mesh) {
-  const meshName = (mesh.name || "").toLowerCase();
-
-  const materials = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
-  const materialNames = materials.map((mat) => (mat?.name || "").toLowerCase());
-
-  return (
-    meshName.includes("roof") ||
-    materialNames.some(
-      (name) =>
-        name === "roof_material" ||
-        name.includes("roof_material") ||
-        name.includes("roof")
-    )
-  );
-}
-
 function prepareRoofMaterial(
   material: Mesh["material"],
   colorHex: string,
   roughness: number,
-  metalness: number
+  metalness: number,
+  emissiveIntensity: number,
+  materialType: RoofMaterialType
 ): Material | Material[] {
-  const applyMaterial = (source: Material) => {
+  const apply = (source: Material) => {
     if (!(source instanceof MeshStandardMaterial)) {
-      const fallback = new MeshStandardMaterial();
-      fallback.color.set(colorHex);
-      fallback.emissive.set(colorHex).multiplyScalar(0.12);
-      fallback.roughness = roughness;
-      fallback.metalness = metalness;
-      fallback.needsUpdate = true;
-      return fallback;
+      const mat = new MeshStandardMaterial();
+
+      mat.color.set(colorHex);
+      mat.emissive.set(new Color(colorHex)).multiplyScalar(emissiveIntensity);
+      mat.roughness = roughness;
+      mat.metalness = metalness;
+      mat.needsUpdate = true;
+
+      return mat;
     }
 
     const next = source.clone();
-    next.name = source.name;
-    next.color.set(colorHex);
-    next.emissive.set(colorHex).multiplyScalar(0.12);
-    next.roughness = roughness;
-    next.metalness = metalness;
+    const isStandingSeam = materialType === "standing_seam";
+
+    if (isStandingSeam) {
+      next.map = source.map;
+      next.normalMap = source.normalMap;
+      next.bumpMap = source.bumpMap;
+      next.roughnessMap = source.roughnessMap;
+      next.metalnessMap = source.metalnessMap;
+
+      next.color.set(colorHex);
+      next.emissive.set(new Color(colorHex)).multiplyScalar(0.12);
+
+      next.roughness = 0.38;
+      next.metalness = 0.3;
+      next.envMapIntensity = 1.6;
+
+      if (next.normalScale) {
+        next.normalScale.set(3.5, 3.5);
+      }
+
+      next.bumpScale = 0.35;
+    } else {
+      next.map = null;
+      next.normalMap = source.normalMap;
+      next.bumpMap = source.bumpMap;
+      next.roughnessMap = source.roughnessMap;
+      next.metalnessMap = source.metalnessMap;
+
+      next.color.set(colorHex);
+      next.emissive.set(new Color(colorHex)).multiplyScalar(emissiveIntensity);
+
+      next.roughness = roughness;
+      next.metalness = metalness;
+      next.envMapIntensity = 1.15;
+    }
+
+    next.toneMapped = true;
     next.needsUpdate = true;
+
     return next;
   };
 
   if (Array.isArray(material)) {
-    return material.map((item) => applyMaterial(item));
+    return material.map(apply);
   }
 
-  return applyMaterial(material);
+  return apply(material);
 }
