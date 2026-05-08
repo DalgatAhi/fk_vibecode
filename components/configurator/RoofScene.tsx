@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useState, type MutableRefObject } from "react";
 import { Canvas, useThree } from "@react-three/fiber";
 import { ContactShadows, Html, OrbitControls } from "@react-three/drei";
 import { HouseModel } from "@/components/configurator/HouseModel";
@@ -9,7 +9,7 @@ import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 
 const IDLE_MS = 3000;
 
-function AutoRotate({ controlsRef }: { controlsRef: React.RefObject<OrbitControlsImpl> }) {
+function AutoRotate({ controlsRef }: { controlsRef: MutableRefObject<OrbitControlsImpl | null> }) {
   const { gl } = useThree();
 
   useEffect(() => {
@@ -44,7 +44,7 @@ function AutoRotate({ controlsRef }: { controlsRef: React.RefObject<OrbitControl
   return null;
 }
 
-function CameraReset({ controlsRef }: { controlsRef: React.RefObject<OrbitControlsImpl> }) {
+function CameraReset({ controlsRef }: { controlsRef: MutableRefObject<OrbitControlsImpl | null> }) {
   const { gl } = useThree();
 
   useEffect(() => {
@@ -67,7 +67,7 @@ type RoofSceneProps = {
 export function RoofScene({ configuration, isPending: _isPending }: RoofSceneProps) {
   const [isCompact, setIsCompact] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const controlsRef = useRef<OrbitControlsImpl>(null);
+  const controlsRef = useRef<OrbitControlsImpl | null>(null);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
