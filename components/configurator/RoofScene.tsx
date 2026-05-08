@@ -147,7 +147,7 @@ export function RoofScene({ configuration, isPending: _isPending }: RoofScenePro
         far={isMobile ? 2.8 : isCompact ? 3.4 : 4.2}
         resolution={1024}
         color="#8f7d6c"
-        position={isMobile ? [0, -2.3, 0] : isCompact ? [0, -1.08, 0] : [0, -0.62, 0]}
+        position={isMobile ? [0, -0.62, 0] : isCompact ? [0, -1.08, 0] : [0, -0.62, 0]}
       />
 
       <AutoRotate controlsRef={controlsRef} />
@@ -166,7 +166,7 @@ export function RoofScene({ configuration, isPending: _isPending }: RoofScenePro
         screenSpacePanning
         minDistance={isMobile ? 4.8 : 3}
         maxDistance={48}
-        target={isMobile ? [0, -1.55, 0] : isCompact ? [0, -0.55, 0] : [0, 0.15, 0]}
+        target={isMobile ? [0, 0.3, 0] : isCompact ? [0, -0.55, 0] : [0, 0.15, 0]}
         minPolarAngle={0.3}
         maxPolarAngle={Math.PI / 1.72}
       />
