@@ -4,8 +4,7 @@ import { useEffect, useMemo } from "react";
 import { useGLTF } from "@react-three/drei";
 import { Color, Mesh, MeshStandardMaterial, Material, Object3D } from "three";
 import type { RoofConfiguration, RoofMaterialType, RoofShape } from "@/lib/types";
-
-const MODEL_PATH = "/models/house.glb";
+import { HOUSE_MODELS } from "@/data/configurator";
 
 const ROOF_MATERIALS = {
   corrugated: { roughness: 0.5, metalness: 0.24, emissiveIntensity: 0.08 },
@@ -16,7 +15,8 @@ const ROOF_MATERIALS = {
   { roughness: number; metalness: number; emissiveIntensity: number }
 >;
 
-const SHAPE_ROOF_OBJECTS = {
+// house.glb — объекты крыши по форме и материалу
+const HOUSE1_SHAPE_OBJECTS = {
   default: {
     metal_tile: ["Roof_Metal"],
     corrugated: ["Roof_Profnastil"],
@@ -29,12 +29,37 @@ const SHAPE_ROOF_OBJECTS = {
   },
 } satisfies Record<"default" | "hip", Record<RoofMaterialType, string[]>>;
 
-const ROOF_BASE_OBJECTS = ["Roof_Base"];
+// house2.glb — объекты крыши по материалу (только двускатная форма)
+const HOUSE2_MATERIAL_OBJECTS = {
+  metal_tile: ["Roof_2skat_Metall"],
+  corrugated: ["Roof_2skat_Profnastil"],
+  standing_seam: ["Roof_2skat_Falcnastil"],
+} satisfies Record<RoofMaterialType, string[]>;
 
-const ALL_ROOF_OBJECT_NAMES = [
-  ...Object.values(SHAPE_ROOF_OBJECTS.default).flat(),
-  ...Object.values(SHAPE_ROOF_OBJECTS.hip).flat(),
-];
+type ModelConfig = {
+  allRoofObjects: string[];
+  baseObjects: string[];
+  getRoofObjectNames: (roofShape: RoofShape, materialType: RoofMaterialType) => string[];
+};
+
+const MODEL_CONFIGS: Record<string, ModelConfig> = {
+  [HOUSE_MODELS.default]: {
+    allRoofObjects: [
+      ...Object.values(HOUSE1_SHAPE_OBJECTS.default).flat(),
+      ...Object.values(HOUSE1_SHAPE_OBJECTS.hip).flat(),
+    ],
+    baseObjects: ["Roof_Base"],
+    getRoofObjectNames: (roofShape, materialType) => {
+      const shapeKey = roofShape === "hip" ? "hip" : "default";
+      return HOUSE1_SHAPE_OBJECTS[shapeKey][materialType];
+    },
+  },
+  [HOUSE_MODELS.gable]: {
+    allRoofObjects: Object.values(HOUSE2_MATERIAL_OBJECTS).flat(),
+    baseObjects: ["Roof_2skat_Base"],
+    getRoofObjectNames: (_roofShape, materialType) => HOUSE2_MATERIAL_OBJECTS[materialType],
+  },
+};
 
 function findObjects(scene: Object3D, names: string[]) {
   const result: Object3D[] = [];
@@ -48,11 +73,6 @@ function findObjects(scene: Object3D, names: string[]) {
   });
 
   return result;
-}
-
-function getRoofObjectNames(roofShape: RoofShape, materialType: RoofMaterialType) {
-  const shapeKey = roofShape === "hip" ? "hip" : "default";
-  return SHAPE_ROOF_OBJECTS[shapeKey][materialType];
 }
 
 function setVisible(objects: Object3D[], visible: boolean) {
@@ -74,25 +94,34 @@ function setShadows(scene: Object3D) {
   });
 }
 
-export function HouseModel({ configuration }: { configuration: RoofConfiguration }) {
-  const { scene } = useGLTF(MODEL_PATH);
+export function HouseModel({
+  configuration,
+  modelPath,
+}: {
+  configuration: RoofConfiguration;
+  modelPath: string;
+}) {
+  const { scene } = useGLTF(modelPath);
   const clonedScene = useMemo(() => scene.clone(true), [scene]);
   const roofMaterialConfig = ROOF_MATERIALS[configuration.materialType];
+  const modelConfig = MODEL_CONFIGS[modelPath] ?? MODEL_CONFIGS[HOUSE_MODELS.default];
 
   useEffect(() => {
     setShadows(clonedScene);
 
-    const roofBaseObjects = findObjects(clonedScene, ROOF_BASE_OBJECTS);
-    setVisible(roofBaseObjects, true);
+    if (modelConfig.baseObjects.length > 0) {
+      const baseObjects = findObjects(clonedScene, modelConfig.baseObjects);
+      setVisible(baseObjects, true);
+    }
 
-    const allRoofObjects = findObjects(clonedScene, ALL_ROOF_OBJECT_NAMES);
+    const allRoofObjects = findObjects(clonedScene, modelConfig.allRoofObjects);
     setVisible(allRoofObjects, false);
 
-    const activeRoof = findObjects(
-      clonedScene,
-      getRoofObjectNames(configuration.roofShape, configuration.materialType)
+    const activeRoofNames = modelConfig.getRoofObjectNames(
+      configuration.roofShape,
+      configuration.materialType
     );
-
+    const activeRoof = findObjects(clonedScene, activeRoofNames);
     setVisible(activeRoof, true);
 
     activeRoof.forEach((object) => {
@@ -111,6 +140,7 @@ export function HouseModel({ configuration }: { configuration: RoofConfiguration
     });
   }, [
     clonedScene,
+    modelConfig,
     configuration.roofShape,
     configuration.materialType,
     configuration.color.hex,
@@ -126,7 +156,8 @@ export function HouseModel({ configuration }: { configuration: RoofConfiguration
   );
 }
 
-useGLTF.preload(MODEL_PATH);
+useGLTF.preload(HOUSE_MODELS.default);
+useGLTF.preload(HOUSE_MODELS.gable);
 
 function prepareRoofMaterial(
   material: Mesh["material"],

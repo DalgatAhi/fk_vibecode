@@ -5,6 +5,7 @@ import { Canvas, useThree } from "@react-three/fiber";
 import { ContactShadows, Html, OrbitControls } from "@react-three/drei";
 import { HouseModel } from "@/components/configurator/HouseModel";
 import type { RoofConfiguration } from "@/lib/types";
+import { HOUSE_MODELS } from "@/data/configurator";
 import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 
 const IDLE_MS = 3000;
@@ -64,7 +65,12 @@ type RoofSceneProps = {
   isPending: boolean;
 };
 
+function getModelPath(configuration: RoofConfiguration): string {
+  return configuration.roofShape === "gable" ? HOUSE_MODELS.gable : HOUSE_MODELS.default;
+}
+
 export function RoofScene({ configuration, isPending: _isPending }: RoofSceneProps) {
+  const modelPath = getModelPath(configuration);
   const [isCompact, setIsCompact] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const controlsRef = useRef<OrbitControlsImpl | null>(null);
@@ -137,7 +143,7 @@ export function RoofScene({ configuration, isPending: _isPending }: RoofScenePro
           </Html>
         }
       >
-        <HouseModel configuration={configuration} />
+        <HouseModel key={modelPath} configuration={configuration} modelPath={modelPath} />
       </Suspense>
 
       <ContactShadows

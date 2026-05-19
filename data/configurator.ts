@@ -1,5 +1,12 @@
 import type { ColorOption, MaterialOption, RoofConfiguration, RoofShapeOption } from "@/lib/types";
 
+export const HOUSE_MODELS = {
+  default: "/models/house.glb",
+  gable: "/models/house2.glb",
+} as const;
+
+export type HouseModelKey = keyof typeof HOUSE_MODELS;
+
 export const COLOR_OPTIONS: ColorOption[] = [
   { value: "graphite", label: "Графит", hex: "#4b4f57", accent: "#35373d" },
   { value: "brown", label: "Коричневый", hex: "#6d4937", accent: "#503427" },
