@@ -66,7 +66,9 @@ type RoofSceneProps = {
 };
 
 function getModelPath(configuration: RoofConfiguration): string {
-  return configuration.roofShape === "gable" ? HOUSE_MODELS.gable : HOUSE_MODELS.default;
+  if (configuration.roofShape === "gable") return HOUSE_MODELS.gable;
+  if (configuration.roofShape === "single_slope") return HOUSE_MODELS.hip;
+  return HOUSE_MODELS.default;
 }
 
 export function RoofScene({ configuration, isPending: _isPending }: RoofSceneProps) {

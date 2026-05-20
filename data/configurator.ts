@@ -3,6 +3,7 @@ import type { ColorOption, MaterialOption, RoofConfiguration, RoofShapeOption } 
 export const HOUSE_MODELS = {
   default: "/models/house.glb",
   gable: "/models/house2.glb",
+  hip: "/models/house3.glb",
 } as const;
 
 export type HouseModelKey = keyof typeof HOUSE_MODELS;
@@ -25,12 +26,12 @@ export const ROOF_SHAPE_OPTIONS: RoofShapeOption[] = [
   },
   {
     value: "single_slope",
-    label: "Односкатная",
+    label: "Вальмовая",
     description: "Минималистичная форма с одним направленным уклоном.",
   },
   {
     value: "hip",
-    label: "Вальмовая",
+    label: "Четырёхскатная",
     description: "Четырёхскатная конструкция для домов сложной формы.",
   },
   {

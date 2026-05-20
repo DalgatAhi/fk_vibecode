@@ -7,49 +7,97 @@ export default function HomePage() {
       <Header />
 
       <main className="page-shell">
+
+        {/* ── Hero ── */}
         <section className="hero">
           <div className="hero-copy">
             <p className="eyebrow">Кровельная компания</p>
             <h1 suppressHydrationWarning>
-              3D-конфигуратор крыши для быстрой заявки и наглядного выбора.
+              3D‑конфигуратор<br />крыши для<br />быстрого расчёта
             </h1>
             <p className="hero-text">
-              Выберите форму крыши, материал и оттенок покрытия, покрутите модель
-              в 3D и сразу отправьте заявку менеджеру с готовой конфигурацией.
+              Выберите форму, материал и цвет покрытия — менеджер подготовит
+              расчёт по готовой конфигурации.
             </p>
             <div className="hero-actions">
               <a href="#configurator" className="button button-primary">
                 Открыть конфигуратор
               </a>
               <a href="/configurator" className="button button-secondary">
-                Отдельная страница
+                Полная страница
               </a>
             </div>
           </div>
-          <div className="hero-facts" aria-label="Преимущества">
-            <div>
+
+          <div className="hero-stats" aria-label="Ключевые показатели">
+            <div className="hero-stat">
               <span>4</span>
               <p>формы крыши</p>
             </div>
-            <div>
+            <div className="hero-stat">
               <span>3</span>
               <p>типа покрытия</p>
             </div>
-            <div>
+            <div className="hero-stat">
               <span>7</span>
-              <p>доступных цветов</p>
+              <p>цветов</p>
+            </div>
+            <div className="hero-stat">
+              <span>1</span>
+              <p>минута на заявку</p>
             </div>
           </div>
         </section>
 
-        <section className="feature-strip">
-          <p>Вращение, масштабирование и смена конфигурации без перезагрузки.</p>
-          <p>Ссылка с параметрами и сохранение в браузере уже включены.</p>
-        </section>
+        {/* ── Stats strip ── */}
+        <div className="stats-strip" aria-label="Преимущества">
+          <div className="stat-card">
+            <div className="stat-card-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                <polyline points="9 22 9 12 15 12 15 22" />
+              </svg>
+            </div>
+            <strong>Несколько форм крыши</strong>
+            <p>Двускатная, вальмовая, четырёхскатная, шатровая — каждая в 3D</p>
+          </div>
+          <div className="stat-card">
+            <div className="stat-card-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+                <line x1="8" y1="21" x2="16" y2="21" />
+                <line x1="12" y1="17" x2="12" y2="21" />
+              </svg>
+            </div>
+            <strong>3D прямо в браузере</strong>
+            <p>Вращение, масштаб и смена конфигурации без перезагрузки</p>
+          </div>
+          <div className="stat-card">
+            <div className="stat-card-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+              </svg>
+            </div>
+            <strong>Ссылка с параметрами</strong>
+            <p>Конфигурация сохраняется в URL и браузере автоматически</p>
+          </div>
+          <div className="stat-card">
+            <div className="stat-card-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+              </svg>
+            </div>
+            <strong>Заявка за 1 минуту</strong>
+            <p>Менеджер получает конфигурацию вместе с вашими контактами</p>
+          </div>
+        </div>
 
+        {/* ── Configurator ── */}
         <section id="configurator" className="configurator-section">
           <Configurator3D />
         </section>
+
       </main>
 
       <footer className="site-footer" aria-label="Подвал сайта">
@@ -97,7 +145,12 @@ export default function HomePage() {
                 <a href="#configurator" className="footer-link">Конфигуратор</a>
                 <a href="#configurator" className="footer-link">Материалы</a>
                 <a href="#footer-contacts" className="footer-link">Контакты</a>
-                <a href="https://fin-krovlya.ru" className="footer-link footer-link-ext" target="_blank" rel="noopener noreferrer">
+                <a
+                  href="https://fin-krovlya.ru"
+                  className="footer-link footer-link-ext"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   fin-krovlya.ru
                   <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
                     <path d="M2.5 1H9m0 0v6.5M9 1 1 9" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />

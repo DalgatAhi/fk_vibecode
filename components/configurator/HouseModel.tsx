@@ -6,6 +6,8 @@ import { Color, Mesh, MeshStandardMaterial, Material, Object3D } from "three";
 import type { RoofConfiguration, RoofMaterialType, RoofShape } from "@/lib/types";
 import { HOUSE_MODELS } from "@/data/configurator";
 
+const LOCKED_MESH_NAMES = ["podstav"];
+
 const ROOF_MATERIALS = {
   corrugated: { roughness: 0.5, metalness: 0.24, emissiveIntensity: 0.08 },
   metal_tile: { roughness: 0.46, metalness: 0.3, emissiveIntensity: 0.08 },
@@ -36,6 +38,13 @@ const HOUSE2_MATERIAL_OBJECTS = {
   standing_seam: ["Roof_2skat_Falcnastil"],
 } satisfies Record<RoofMaterialType, string[]>;
 
+// house3.glb — объекты крыши по материалу (вальмовая форма)
+const HOUSE3_MATERIAL_OBJECTS = {
+  metal_tile: ["roof_main_metal"],
+  corrugated: ["roof_main_profnastil"],
+  standing_seam: ["roof_main_falcnastil"],
+} satisfies Record<RoofMaterialType, string[]>;
+
 type ModelConfig = {
   allRoofObjects: string[];
   baseObjects: string[];
@@ -58,6 +67,11 @@ const MODEL_CONFIGS: Record<string, ModelConfig> = {
     allRoofObjects: Object.values(HOUSE2_MATERIAL_OBJECTS).flat(),
     baseObjects: ["Roof_2skat_Base"],
     getRoofObjectNames: (_roofShape, materialType) => HOUSE2_MATERIAL_OBJECTS[materialType],
+  },
+  [HOUSE_MODELS.hip]: {
+    allRoofObjects: Object.values(HOUSE3_MATERIAL_OBJECTS).flat(),
+    baseObjects: [],
+    getRoofObjectNames: (_roofShape, materialType) => HOUSE3_MATERIAL_OBJECTS[materialType],
   },
 };
 
@@ -109,6 +123,14 @@ export function HouseModel({
   useEffect(() => {
     setShadows(clonedScene);
 
+    // Сохраняем оригинальные материалы заблокированных объектов до любых изменений
+    const savedLockedMaterials = new Map<Mesh, Material | Material[]>();
+    findObjects(clonedScene, LOCKED_MESH_NAMES).forEach((obj) => {
+      obj.traverse((child) => {
+        if (child instanceof Mesh) savedLockedMaterials.set(child, child.material);
+      });
+    });
+
     if (modelConfig.baseObjects.length > 0) {
       const baseObjects = findObjects(clonedScene, modelConfig.baseObjects);
       setVisible(baseObjects, true);
@@ -128,6 +150,9 @@ export function HouseModel({
       object.traverse((child) => {
         if (!(child instanceof Mesh)) return;
 
+        const childNameLower = child.name.toLowerCase();
+        if (LOCKED_MESH_NAMES.some((locked) => childNameLower.includes(locked))) return;
+
         child.material = prepareRoofMaterial(
           child.material,
           configuration.color.hex,
@@ -137,6 +162,11 @@ export function HouseModel({
           configuration.materialType
         );
       });
+    });
+
+    // Восстанавливаем оригинальные материалы заблокированных объектов
+    savedLockedMaterials.forEach((material, mesh) => {
+      mesh.material = material;
     });
   }, [
     clonedScene,
@@ -158,6 +188,7 @@ export function HouseModel({
 
 useGLTF.preload(HOUSE_MODELS.default);
 useGLTF.preload(HOUSE_MODELS.gable);
+useGLTF.preload(HOUSE_MODELS.hip);
 
 function prepareRoofMaterial(
   material: Mesh["material"],
