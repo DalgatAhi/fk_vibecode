@@ -22,10 +22,14 @@ export function normalizeConfiguration(value: unknown): RoofConfiguration {
     COLOR_OPTIONS.find((option) => option.value === candidate.color?.value) ??
     DEFAULT_CONFIGURATION.color;
 
+  const grayColor = COLOR_OPTIONS.find((option) => option.value === "gray") ?? DEFAULT_CONFIGURATION.color;
+  const effectiveColor =
+    materialType === "standing_seam" && roofShape !== "gable" ? grayColor : color;
+
   return {
     roofShape,
     materialType,
-    color,
+    color: effectiveColor,
   };
 }
 
