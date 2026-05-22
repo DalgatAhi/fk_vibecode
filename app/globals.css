@@ -967,39 +967,42 @@ input {
   .footer-brand,
   .footer-nav,
   .footer-contact {
-    justify-items: center;
-    text-align: center;
+    justify-items: start;
+    text-align: left;
   }
 
   .footer-brand-top {
-    justify-content: center;
+    justify-content: flex-start;
   }
 
   .footer-social {
-    justify-content: center;
+    justify-content: flex-start;
   }
 
   .footer-description {
-    max-width: 28ch;
+    max-width: 34ch;
   }
 
   .footer-link,
-  .footer-policy,
+  .footer-policy {
+    width: fit-content;
+    justify-content: flex-start;
+    text-align: left;
+  }
+
   .footer-button {
-    width: 100%;
-    justify-content: center;
-    text-align: center;
+    width: fit-content;
   }
 
   .footer-link:hover {
-    transform: none;
+    transform: translateX(2px);
   }
 
   .footer-bottom {
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     padding-top: var(--space-4);
-    text-align: center;
+    text-align: left;
   }
 
   .header-nav .header-link:not(.header-cta) {
@@ -1561,6 +1564,11 @@ input {
 }
 
 @media (max-width: 720px) {
+  .nh-hero {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
   .nh-title {
     font-size: clamp(2.3rem, 9.5vw, 3.4rem);
   }
