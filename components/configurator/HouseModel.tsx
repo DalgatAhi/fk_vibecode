@@ -186,9 +186,10 @@ export function HouseModel({
   );
 }
 
+// Preload только самой лёгкой модели (26 MB).
+// house2.glb (61 MB) и house3.glb (32 MB) загружаются по требованию,
+// иначе на мобильных одновременно качается ~119 MB и WebGL падает по памяти.
 useGLTF.preload(HOUSE_MODELS.default);
-useGLTF.preload(HOUSE_MODELS.gable);
-useGLTF.preload(HOUSE_MODELS.hip);
 
 function prepareRoofMaterial(
   material: Mesh["material"],
