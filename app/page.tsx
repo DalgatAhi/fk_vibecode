@@ -9,87 +9,167 @@ export default function HomePage() {
       <main className="page-shell">
 
         {/* ── Hero ── */}
-        <section className="hero">
-          <div className="hero-copy">
-            <p className="eyebrow">Кровельная компания</p>
-            <h1 suppressHydrationWarning>
-              3D‑конфигуратор<br />крыши для<br />быстрого расчёта
-            </h1>
-            <p className="hero-text">
-              Выберите форму, материал и цвет покрытия — менеджер подготовит
-              расчёт по готовой конфигурации.
-            </p>
-            <div className="hero-actions">
-              <a href="#configurator" className="button button-primary">
-                Открыть конфигуратор
-              </a>
-              <a href="/configurator" className="button button-secondary">
-                Полная страница
-              </a>
-            </div>
-          </div>
+        <section className="nh-hero">
+          <div className="nh-bg-pattern" aria-hidden="true" />
 
-          <div className="hero-stats" aria-label="Ключевые показатели">
-            <div className="hero-stat">
-              <span>4</span>
-              <p>формы крыши</p>
+          <div className="nh-grid">
+
+            {/* Left block */}
+            <div className="nh-left">
+              <span className="nh-badge">Кровельная компания</span>
+
+              <h1 className="nh-title" suppressHydrationWarning>
+                Рассчитайте крышу<br />
+                <span className="nh-accent">по готовой<br />конфигурации</span>
+              </h1>
+
+              <p className="nh-sub">
+                Выберите форму, покрытие и цвет — менеджер подготовит расчёт на основе ваших параметров.
+              </p>
+
+              <div className="nh-actions">
+                <a href="#configurator" className="button button-primary nh-btn-primary">
+                  Открыть конфигуратор
+                </a>
+                <a href="#nh-features" className="button button-secondary nh-btn-secondary">
+                  Смотреть возможности
+                </a>
+              </div>
+
+              <div className="nh-trust">
+                <span className="nh-trust-item">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                  Без замеров на старте
+                </span>
+                <span className="nh-trust-item">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                  Заявка за 1 минуту
+                </span>
+                <span className="nh-trust-item">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+                  Расчёт от менеджера
+                </span>
+              </div>
             </div>
-            <div className="hero-stat">
-              <span>3</span>
-              <p>типа покрытия</p>
+
+            {/* Right block: configurator preview */}
+            <div className="nh-right">
+              <div className="nh-card">
+
+                <div className="nh-card-header">
+                  <div className="nh-dots" aria-hidden="true">
+                    <span className="nh-dot" />
+                    <span className="nh-dot" />
+                    <span className="nh-dot nh-dot-active" />
+                  </div>
+                  <span className="nh-card-lbl">Конфигурация крыши</span>
+                </div>
+
+                {/* Architectural sketch */}
+                <div className="nh-sketch">
+                  <svg viewBox="0 0 320 158" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Схема двускатной крыши">
+                    <line x1="80" y1="0" x2="80" y2="158" stroke="#b44e2f" strokeOpacity="0.07" strokeWidth="1" strokeDasharray="3 6"/>
+                    <line x1="160" y1="0" x2="160" y2="158" stroke="#b44e2f" strokeOpacity="0.07" strokeWidth="1" strokeDasharray="3 6"/>
+                    <line x1="240" y1="0" x2="240" y2="158" stroke="#b44e2f" strokeOpacity="0.07" strokeWidth="1" strokeDasharray="3 6"/>
+                    <line x1="0" y1="52" x2="320" y2="52" stroke="#b44e2f" strokeOpacity="0.07" strokeWidth="1" strokeDasharray="3 6"/>
+                    <line x1="0" y1="105" x2="320" y2="105" stroke="#b44e2f" strokeOpacity="0.07" strokeWidth="1" strokeDasharray="3 6"/>
+                    <rect x="48" y="105" width="224" height="46" rx="2" fill="rgba(255,255,255,0.5)" stroke="rgba(31,28,24,0.18)" strokeWidth="1.5"/>
+                    <polygon points="32,105 160,28 288,105" fill="rgba(180,78,47,0.05)" stroke="#b44e2f" strokeWidth="2" strokeLinejoin="round" strokeLinecap="round"/>
+                    <line x1="160" y1="28" x2="160" y2="105" stroke="rgba(31,28,24,0.12)" strokeWidth="1" strokeDasharray="4 5"/>
+                    <rect x="214" y="64" width="16" height="42" rx="1" fill="rgba(255,255,255,0.4)" stroke="rgba(31,28,24,0.15)" strokeWidth="1.2"/>
+                    <rect x="142" y="118" width="36" height="28" rx="2" fill="rgba(180,78,47,0.06)" stroke="rgba(31,28,24,0.15)" strokeWidth="1.2"/>
+                    <line x1="160" y1="118" x2="160" y2="146" stroke="rgba(31,28,24,0.1)" strokeWidth="1"/>
+                    <line x1="142" y1="132" x2="178" y2="132" stroke="rgba(31,28,24,0.1)" strokeWidth="1"/>
+                    <circle cx="32" cy="105" r="3" fill="#b44e2f" fillOpacity="0.45"/>
+                    <circle cx="288" cy="105" r="3" fill="#b44e2f" fillOpacity="0.45"/>
+                    <circle cx="160" cy="28" r="4" fill="#b44e2f" fillOpacity="0.9"/>
+                    <line x1="32" y1="96" x2="32" y2="114" stroke="#b44e2f" strokeOpacity="0.3" strokeWidth="1"/>
+                    <line x1="288" y1="96" x2="288" y2="114" stroke="#b44e2f" strokeOpacity="0.3" strokeWidth="1"/>
+                    <path d="M150,40 Q160,52 170,40" stroke="#b44e2f" strokeOpacity="0.35" strokeWidth="1" fill="none"/>
+                  </svg>
+                </div>
+
+                {/* Parameters */}
+                <div className="nh-params">
+                  <div className="nh-param">
+                    <span className="nh-param-key">Форма</span>
+                    <span className="nh-param-val">Двускатная</span>
+                  </div>
+                  <div className="nh-param">
+                    <span className="nh-param-key">Покрытие</span>
+                    <span className="nh-param-val">Металлочерепица</span>
+                  </div>
+                  <div className="nh-param">
+                    <span className="nh-param-key">Цвет</span>
+                    <span className="nh-param-val">Графит</span>
+                  </div>
+                </div>
+
+                {/* Color swatches */}
+                <div className="nh-swatches" aria-label="Палитра цветов">
+                  <div className="nh-swatch nh-swatch-active" style={{background:'#3a3a3a'}} title="Графит"/>
+                  <div className="nh-swatch" style={{background:'#7a3010'}} title="Коричневый"/>
+                  <div className="nh-swatch" style={{background:'#b02020'}} title="Красный"/>
+                  <div className="nh-swatch" style={{background:'#2a5a2a'}} title="Зелёный"/>
+                  <div className="nh-swatch" style={{background:'#1a3660'}} title="Синий"/>
+                  <div className="nh-swatch" style={{background:'#8c7355'}} title="Бежевый"/>
+                  <div className="nh-swatch" style={{background:'#d8d0c4'}} title="Светлый"/>
+                </div>
+
+                {/* Ready strip */}
+                <div className="nh-ready">
+                  <div className="nh-ready-info">
+                    <p className="nh-ready-title">Готово к расчёту</p>
+                    <p className="nh-ready-hint">3 параметра выбрано</p>
+                  </div>
+                  <a href="#configurator" className="button button-primary nh-send-btn">
+                    Отправить параметры
+                  </a>
+                </div>
+
+              </div>
+
+              {/* Floating badge */}
+              <div className="nh-float" aria-hidden="true">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="white" aria-hidden="true">
+                  <path d="M13 2L3 14h9l-1 8 10-12h-8l-1-8z"/>
+                </svg>
+                Ответ за 15 минут
+              </div>
             </div>
-            <div className="hero-stat">
-              <span>7</span>
-              <p>цветов</p>
-            </div>
-            <div className="hero-stat">
-              <span>1</span>
-              <p>минута на заявку</p>
-            </div>
+
           </div>
         </section>
 
-        {/* ── Stats strip ── */}
-        <div className="stats-strip" aria-label="Преимущества">
-          <div className="stat-card">
-            <div className="stat-card-icon">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                <polyline points="9 22 9 12 15 12 15 22" />
-              </svg>
+        {/* ── Feature cards ── */}
+        <div className="nh-features" id="nh-features">
+          <div className="nh-feat">
+            <div className="nh-feat-num">4</div>
+            <div className="nh-feat-text">
+              <strong>формы крыши</strong>
+              <p>Двускатная, вальмовая, шатровая и четырёхскатная</p>
             </div>
-            <strong>Несколько форм крыши</strong>
-            <p>Двускатная, вальмовая, четырёхскатная, шатровая — каждая в 3D</p>
           </div>
-          <div className="stat-card">
-            <div className="stat-card-icon">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
-                <line x1="8" y1="21" x2="16" y2="21" />
-                <line x1="12" y1="17" x2="12" y2="21" />
-              </svg>
+          <div className="nh-feat">
+            <div className="nh-feat-num">3</div>
+            <div className="nh-feat-text">
+              <strong>типа покрытия</strong>
+              <p>Популярные материалы для частных домов</p>
             </div>
-            <strong>3D прямо в браузере</strong>
-            <p>Вращение, масштаб и смена конфигурации без перезагрузки</p>
           </div>
-          <div className="stat-card">
-            <div className="stat-card-icon">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
-                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
-              </svg>
+          <div className="nh-feat">
+            <div className="nh-feat-num">7</div>
+            <div className="nh-feat-text">
+              <strong>цветов</strong>
+              <p>Базовая палитра для быстрой конфигурации</p>
             </div>
-            <strong>Ссылка с параметрами</strong>
-            <p>Конфигурация сохраняется в URL и браузере автоматически</p>
           </div>
-          <div className="stat-card">
-            <div className="stat-card-icon">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
-              </svg>
+          <div className="nh-feat">
+            <div className="nh-feat-num">1</div>
+            <div className="nh-feat-text">
+              <strong>минута на заявку</strong>
+              <p>Быстрая заявка без сложных форм</p>
             </div>
-            <strong>Заявка за 1 минуту</strong>
-            <p>Менеджер получает конфигурацию вместе с вашими контактами</p>
           </div>
         </div>
 
