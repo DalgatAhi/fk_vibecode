@@ -25,7 +25,7 @@ const HOUSE1_SHAPE_OBJECTS = {
     standing_seam: ["Roof_Falcev"],
   },
   hip: {
-    metal_tile: ["Roof_Valm_Metal"],
+    metal_tile: ["Roof_Valm_Metal2"],
     corrugated: ["Roof_Valm_Prof"],
     standing_seam: ["Roof_Valm_Falc"],
   },
