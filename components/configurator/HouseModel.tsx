@@ -49,10 +49,7 @@ type ModelConfig = {
   allRoofObjects: string[];
   baseObjects: string[];
   getRoofObjectNames: (roofShape: RoofShape, materialType: RoofMaterialType) => string[];
-  getHiddenObjects?: (roofShape: RoofShape, materialType: RoofMaterialType) => string[];
 };
-
-const HIP_METAL_HIDDEN = ["walls", "strop", "Klinker", "Cube", "Door", "DoorFrame", "Handle", "Plane", "Stairs", "Window", "House", "Roof_Base"];
 
 const MODEL_CONFIGS: Record<string, ModelConfig> = {
   [HOUSE_MODELS.default]: {
@@ -66,10 +63,6 @@ const MODEL_CONFIGS: Record<string, ModelConfig> = {
     getRoofObjectNames: (roofShape, materialType) => {
       const shapeKey = roofShape === "hip" ? "hip" : "default";
       return HOUSE1_SHAPE_OBJECTS[shapeKey][materialType];
-    },
-    getHiddenObjects: (roofShape, materialType) => {
-      if (roofShape === "hip" && materialType === "metal_tile") return HIP_METAL_HIDDEN;
-      return [];
     },
   },
   [HOUSE_MODELS.gable]: {
@@ -154,12 +147,6 @@ export function HouseModel({
     );
     const activeRoof = findObjects(clonedScene, activeRoofNames);
     setVisible(activeRoof, true);
-
-    const hiddenNames = modelConfig.getHiddenObjects?.(configuration.roofShape, configuration.materialType) ?? [];
-    if (hiddenNames.length > 0) {
-      const hiddenObjects = findObjects(clonedScene, hiddenNames);
-      setVisible(hiddenObjects, false);
-    }
 
     activeRoof.forEach((object) => {
       object.traverse((child) => {
