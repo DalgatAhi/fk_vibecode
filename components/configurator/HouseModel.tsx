@@ -2,7 +2,10 @@
 
 import { useEffect, useMemo } from "react";
 import { useGLTF } from "@react-three/drei";
+import { DRACOLoader } from "three/addons/loaders/DRACOLoader.js";
 import { Color, Mesh, MeshStandardMaterial, Material, Object3D } from "three";
+
+useGLTF.setDecoderPath("https://www.gstatic.com/draco/versioned/decoders/1.5.7/");
 import type { RoofConfiguration, RoofMaterialType, RoofShape } from "@/lib/types";
 import { HOUSE_MODELS } from "@/data/configurator";
 
@@ -34,7 +37,7 @@ const HOUSE1_SHAPE_OBJECTS = {
 // house2.glb — объекты крыши по материалу (только двускатная форма)
 const HOUSE2_MATERIAL_OBJECTS = {
   metal_tile: ["Roof_2skat_Metall"],
-  corrugated: ["Roof_2skat_Profnastil"],
+  corrugated: ["Roof_2scat_Profnastil"],
   standing_seam: ["Roof_2skat_Falcnastil"],
 } satisfies Record<RoofMaterialType, string[]>;
 
@@ -67,7 +70,7 @@ const MODEL_CONFIGS: Record<string, ModelConfig> = {
   },
   [HOUSE_MODELS.gable]: {
     allRoofObjects: Object.values(HOUSE2_MATERIAL_OBJECTS).flat(),
-    baseObjects: ["Roof_2skat_Base"],
+    baseObjects: ["Roof_2scat_Base"],
     getRoofObjectNames: (_roofShape, materialType) => HOUSE2_MATERIAL_OBJECTS[materialType],
   },
   [HOUSE_MODELS.hip]: {
