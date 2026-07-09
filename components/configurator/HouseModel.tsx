@@ -140,6 +140,19 @@ export function HouseModel({
     if (modelConfig.baseObjects.length > 0) {
       const baseObjects = findObjects(clonedScene, modelConfig.baseObjects);
       setVisible(baseObjects, true);
+      baseObjects.forEach((object) => {
+        object.traverse((child) => {
+          if (!(child instanceof Mesh)) return;
+          child.material = prepareRoofMaterial(
+            child.material,
+            configuration.color.hex,
+            roofMaterialConfig.roughness,
+            roofMaterialConfig.metalness,
+            roofMaterialConfig.emissiveIntensity,
+            configuration.materialType
+          );
+        });
+      });
     }
 
     const allRoofObjects = findObjects(clonedScene, modelConfig.allRoofObjects);
