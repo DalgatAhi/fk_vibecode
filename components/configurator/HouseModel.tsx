@@ -29,7 +29,7 @@ const HOUSE1_SHAPE_OBJECTS = {
   },
   hip: {
     metal_tile: ["Roof_Valm_Metal2"],
-    corrugated: ["Roof_Valm_Prof"],
+    corrugated: ["Roof_Valm_Proflist"],
     standing_seam: ["Roof_Valm_Falc"],
   },
 } satisfies Record<"default" | "hip", Record<RoofMaterialType, string[]>>;
@@ -60,6 +60,7 @@ const MODEL_CONFIGS: Record<string, ModelConfig> = {
       ...Object.values(HOUSE1_SHAPE_OBJECTS.default).flat(),
       ...Object.values(HOUSE1_SHAPE_OBJECTS.hip).flat(),
       "Roof_Valm_Metal",
+      "Roof_Valm_Prof",
       "Klinker",
     ],
     baseObjects: ["Roof_Base"],
