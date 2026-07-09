@@ -24,7 +24,7 @@ const ROOF_MATERIALS = {
 const HOUSE1_SHAPE_OBJECTS = {
   default: {
     metal_tile: ["Roof_Metal"],
-    corrugated: ["Roof_Profnastil"],
+    corrugated: ["Roof_Proflist"],
     standing_seam: ["Roof_Falcev"],
   },
   hip: {
@@ -61,6 +61,7 @@ const MODEL_CONFIGS: Record<string, ModelConfig> = {
       ...Object.values(HOUSE1_SHAPE_OBJECTS.hip).flat(),
       "Roof_Valm_Metal",
       "Roof_Valm_Prof",
+      "Roof_Profnastil",
       "Klinker",
     ],
     baseObjects: ["Roof_Base"],
