@@ -74,10 +74,7 @@ export function ControlPanel({
         <h3>Цвет</h3>
         <p>Изменение цвета происходит без перезагрузки страницы.</p>
         <div className="color-grid panel-options">
-          {(configuration.materialType === "standing_seam" && configuration.roofShape !== "gable"
-            ? COLOR_OPTIONS.filter((o) => o.value === "gray")
-            : COLOR_OPTIONS
-          ).map((option) => (
+          {COLOR_OPTIONS.map((option) => (
             <button
               key={option.value}
               type="button"

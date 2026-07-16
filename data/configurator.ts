@@ -55,7 +55,7 @@ export const MATERIAL_OPTIONS: MaterialOption[] = [
   {
     value: "standing_seam",
     label: "Фальцнастил",
-    description: "Сдержанная поверхность с вертикальными швами. Доступен пока только серый цвет.",
+    description: "Сдержанная поверхность с вертикальными швами.",
   },
 ];
 

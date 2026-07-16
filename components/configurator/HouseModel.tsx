@@ -24,8 +24,8 @@ const ROOF_MATERIALS = {
 const HOUSE1_SHAPE_OBJECTS = {
   default: {
     metal_tile: ["Roof_Metal"],
-    corrugated: ["Roof_Proflist"],
-    standing_seam: ["Roof_Falcev"],
+    corrugated: ["Roof_Profnastil019"],
+    standing_seam: ["Roof_Falcnastil"],
   },
   hip: {
     metal_tile: ["Roof_Valm_Metal2"],
@@ -36,9 +36,9 @@ const HOUSE1_SHAPE_OBJECTS = {
 
 // house2.glb — объекты крыши по материалу (только двускатная форма)
 const HOUSE2_MATERIAL_OBJECTS = {
-  metal_tile: ["Roof_2skat_Metall"],
-  corrugated: ["Roof_2scat_Profnastil"],
-  standing_seam: ["Roof_2skat_Falcnastil"],
+  metal_tile: ["Roof_2skat_Metall_New"],
+  corrugated: ["Roof_2skat_Proflist"],
+  standing_seam: ["Roof_2skat_Falc"],
 } satisfies Record<RoofMaterialType, string[]>;
 
 // house3.glb — объекты крыши по материалу (вальмовая форма)
@@ -62,6 +62,8 @@ const MODEL_CONFIGS: Record<string, ModelConfig> = {
       "Roof_Valm_Metal",
       "Roof_Valm_Prof",
       "Roof_Profnastil",
+      "Roof_Proflist",
+      "Roof_Falcev",
       "Klinker",
     ],
     baseObjects: ["Roof_Base"],
@@ -71,7 +73,12 @@ const MODEL_CONFIGS: Record<string, ModelConfig> = {
     },
   },
   [HOUSE_MODELS.gable]: {
-    allRoofObjects: Object.values(HOUSE2_MATERIAL_OBJECTS).flat(),
+    allRoofObjects: [
+      ...Object.values(HOUSE2_MATERIAL_OBJECTS).flat(),
+      "Roof_2skat_Falcnastil",
+      "Roof_2scat_Profnastil",
+      "Roof_2skat_Metall",
+    ],
     baseObjects: ["Roof_2scat_Base"],
     getRoofObjectNames: (_roofShape, materialType) => HOUSE2_MATERIAL_OBJECTS[materialType],
   },
@@ -150,7 +157,10 @@ export function HouseModel({
       configuration.roofShape,
       configuration.materialType
     );
-    const activeRoof = findObjects(clonedScene, activeRoofNames);
+    const activeRoofNamesLower = activeRoofNames.map((name) => name.toLowerCase());
+    const activeRoof = findObjects(clonedScene, activeRoofNames).filter((obj) =>
+      activeRoofNamesLower.includes(obj.name.toLowerCase())
+    );
     setVisible(activeRoof, true);
 
     activeRoof.forEach((object) => {
